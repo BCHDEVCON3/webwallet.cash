@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import './App.css';
 import { useAddress } from './useAddress';
 import QRDisplay from 'qrcode.react';
-// @ts-ignore
-import QRScanner from 'react-qr-scanner';
+import QRScanner from 'react-qr-reader';
 
 function App() {
 
@@ -11,9 +10,10 @@ function App() {
   const [recipient, setRecipient] = useState("");
   const [scanning, setScanning] = useState(false);
 
-  function handleScan(data: string) {
+  function handleScan(data: string | null) {
     if (data?.startsWith("bitcoincash")) {
-
+      setScanning(false);
+      console.log("Recipient:", data);
     }
   }
 
