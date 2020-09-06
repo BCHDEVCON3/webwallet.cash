@@ -1,3 +1,7 @@
+A minimum viable webwallet. 
+
+Demo at [webwallet.cash](https://webwallet.cash).
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
