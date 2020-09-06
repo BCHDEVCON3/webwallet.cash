@@ -32,6 +32,8 @@ export interface AddressBasics {
 
 export const useAddress = () => {
 
+  console.log("useAddress");
+
   const [address, setAddress] = useState<AddressBasics>({ privateKey });
   const [balance, setBalance] = useState<number | undefined>(undefined);
 
@@ -47,7 +49,7 @@ export const useAddress = () => {
       
     }
     deriveAddressDetails();
-  }, []);
+  }, [setBalance]);
 
 
   interface BitcoreUTXO {

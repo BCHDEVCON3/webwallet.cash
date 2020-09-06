@@ -13,7 +13,7 @@ import {
 // import { Utxo } from './interfaces';
 import { cryptoPromise } from './crypto';
 
-const electrum = new ElectrumCluster('CashScript Application', '1.4.1', 2, 3, ClusterOrder.PRIORITY);
+const electrum = new ElectrumCluster('webwallet.cash', '1.4.1', 2, 3, ClusterOrder.PRIORITY);
 
 electrum.addServer('bch.imaginary.cash', 50004, ElectrumTransport.WSS.Scheme, false);
 electrum.addServer('blackie.c3-soft.com', 50004, ElectrumTransport.WSS.Scheme, false);
@@ -24,10 +24,15 @@ electrum.addServer('electrum.imaginary.cash', 50004, ElectrumTransport.WSS.Schem
 
 async function getBalance(address: string, callback: (balance: number) => void) {
 
+  console.log("get_balance called");
+  
+
   const scripthash = await addressToElectrumScriptHash(address);
 
   const result = await performRequest('blockchain.scripthash.get_balance', scripthash) as Balance;
 
+  console.log("Balance .... ", result.unconfirmed + result.confirmed);
+  
   callback(result.unconfirmed + result.confirmed);
 
 }
@@ -36,15 +41,18 @@ export async function subscribeToBalance(address: string, callback: (balance: nu
 
   const scripthash = await addressToElectrumScriptHash(address);
   
-  const result = await subscribeRequest(
-    async () => {
-      await getBalance(address, callback);
+  await getBalance(address, callback);
+
+  const result = await subscribeRequest(() => {
+      getBalance(address, callback);
     }, 'blockchain.scripthash.subscribe', scripthash) as Balance;
 
+  
   console.log(result);
 }
 
 export async function getUtxos(address: string) {
+
     const scripthash = await addressToElectrumScriptHash(address);
 
     const result = await performRequest('blockchain.scripthash.listunspent', scripthash) as ElectrumUtxo[];
