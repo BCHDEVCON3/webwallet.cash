@@ -2,59 +2,46 @@ import React, { useState } from 'react';
 import './App.css';
 import { useAddress } from './useAddress';
 import QRDisplay from 'qrcode.react';
-import QRScanner from 'react-qr-reader';
+import Send from './Send';
 
 function App() {
 
   const address = useAddress();
-  const [recipient, setRecipient] = useState("");
-  const [scanning, setScanning] = useState(false);
-
-  function handleScan(data: string | null) {
-    if (data?.startsWith("bitcoincash")) {
-      setScanning(false);
-      console.log("Recipient:", data);
-    }
-  }
-
-  function handleError(err: any) {
-    console.log("Error:", err);
-  }
+  const [sendMode, setSendMode] = useState(false);
 
   function handleSendButton() {
-    setScanning(true);
+    setSendMode(true);
   }
 
-  function handleCancelButton() {
-    setScanning(false);
+  function cancelSend() {
+    setSendMode(false);
   }
 
   return (
     <div>
-      <header>
-        <p>Web Wallet</p>
+      <header className="App-title">
+        <p>web<span style={{ fontWeight: "bold"}}>wallet</span>.cash</p>
       </header>
-      <p>Balance: {address.balance}</p>
-      <p>URI: {address.uri}</p>
       <div/> 
-      {scanning
-        ? <>
-            <QRScanner
-              delay={100}
-              style={{height: 300, width: 300}}
-              onError={handleError}
-              onScan={handleScan}
-              >
-            </QRScanner>
-            <button onClick={handleCancelButton}>Cancel</button>
-          </> 
+      {sendMode
+        ? <Send
+            cancelSend={cancelSend}
+            address={address}
+          ></Send>
         : <>
+            <p className="App-subtitle">{address.balance 
+              ? address.balance.toString() + " sats"
+              : "loading balance..." }
+              </p>
             { address.uri
-              ? <QRDisplay value={address.uri}></QRDisplay>
-              : ""   
+              ? <div className="QR">
+                  <QRDisplay value={address.uri}></QRDisplay>
+                </div>
+              : ""
             }
-            <div/>
-            <button onClick={handleSendButton}>Send</button>
+            <div>
+              <button onClick={handleSendButton}>Send</button>
+            </div>
         </>
       }
     </div>

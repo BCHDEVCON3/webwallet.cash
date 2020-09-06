@@ -1,3 +1,6 @@
+// Based on  ElectrumNetworkProvider.ts by @rkalis, who also gave guidance on 
+// usage. Thanks Rosco.
+
 import {
   binToHex, cashAddressToLockingBytecode
  } from '@bitauth/libauth';
@@ -25,7 +28,7 @@ async function getBalance(address: string, callback: (balance: number) => void) 
 
   const result = await performRequest('blockchain.scripthash.get_balance', scripthash) as Balance;
 
-  callback(result.unconfirmed);
+  callback(result.unconfirmed + result.confirmed);
 
 }
 
@@ -46,14 +49,7 @@ export async function getUtxos(address: string) {
 
     const result = await performRequest('blockchain.scripthash.listunspent', scripthash) as ElectrumUtxo[];
 
-    const utxos = result.map(utxo => ({
-      txid: utxo.tx_hash,
-      vout: utxo.tx_pos,
-      satoshis: utxo.value,
-      height: utxo.height,
-    }));
-
-    return utxos;
+    return result;
 }
 
 export async function sendRawTransaction(txHex: string): Promise<string> {
@@ -99,7 +95,6 @@ const result = await electrum.subscribe(callback, name, ...parameters);
 
 return result;
 }
-
 
 
 interface ElectrumUtxo {

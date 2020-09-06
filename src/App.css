@@ -7,10 +7,21 @@
   pointer-events: none;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.App-title {
+  color: purple;
+  text-align: center;
+  font-size: xx-large;
+}
+
+.App-subtitle {
+  color: dimgray;
+  text-align: center;
+  font-size: x-large;
+}
+
+.QR {
+  display: flex;
+  justify-content: center;
 }
 
 .App-header {
@@ -26,13 +37,4 @@
 
 .App-link {
   color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
 }
